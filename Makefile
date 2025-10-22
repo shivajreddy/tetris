@@ -35,11 +35,12 @@ ifeq ($(DETECTED_OS),Windows)
     RM := @if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
     RUN := $(TARGET)
 # MacOS
+# MacOS
 else ifeq ($(DETECTED_OS),Darwin)
     TARGET := $(BUILD_DIR)/tetris
     RAYLIB_PATH := $(LIB_DIR)/raylib/macos
     INCLUDES := -I$(RAYLIB_PATH)/include
-    LIBS := -L$(RAYLIB_PATH)/lib -lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
+    LIBS := -L$(RAYLIB_PATH)/lib -Wl,-rpath,$(RAYLIB_PATH)/lib -lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
     MKDIR := @mkdir -p $(BUILD_DIR)
     RM := @rm -rf $(BUILD_DIR)
     RUN := ./$(TARGET)
