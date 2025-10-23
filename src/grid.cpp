@@ -17,18 +17,14 @@ Grid::Grid(int r, int c, int cellsize) {
 
 void Grid::init() {
     for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            grid[r][c] = 0;
-        }
+        for (int c = 0; c < cols; c++) grid[r][c] = 0;
     }
 };
 
 void Grid::print() {
     cout << "Printing Grid\n";
     for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            cout << grid[r][c] << " ";
-        }
+        for (int c = 0; c < cols; c++) cout << grid[r][c] << " ";
         cout << endl;
     }
 };
