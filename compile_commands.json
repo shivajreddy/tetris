@@ -1,0 +1,52 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++23",
+      "-Wall",
+      "-Wextra",
+      "-O2",
+      "-Ilib/raylib/macos/include",
+      "-framework",
+      "OpenGL",
+      "-framework",
+      "Cocoa",
+      "-framework",
+      "IOKit",
+      "-framework",
+      "CoreVideo",
+      "-o",
+      "build/tetris",
+      "src/grid.cpp"
+    ],
+    "directory": "/Users/smpl/dev/projects/tetris",
+    "file": "/Users/smpl/dev/projects/tetris/src/grid.cpp",
+    "output": "/Users/smpl/dev/projects/tetris/build/tetris"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++23",
+      "-Wall",
+      "-Wextra",
+      "-O2",
+      "-Ilib/raylib/macos/include",
+      "-framework",
+      "OpenGL",
+      "-framework",
+      "Cocoa",
+      "-framework",
+      "IOKit",
+      "-framework",
+      "CoreVideo",
+      "-o",
+      "build/tetris",
+      "src/main.cpp"
+    ],
+    "directory": "/Users/smpl/dev/projects/tetris",
+    "file": "/Users/smpl/dev/projects/tetris/src/main.cpp",
+    "output": "/Users/smpl/dev/projects/tetris/build/tetris"
+  }
+]
