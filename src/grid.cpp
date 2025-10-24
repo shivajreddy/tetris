@@ -1,4 +1,4 @@
-#include "grid.h"
+#include "grid.hpp"
 #include "raylib.h"
 #include <iostream>
 #include <vector>
@@ -33,8 +33,7 @@ void Grid::draw() {
     for (int r = 0; r < rows; r++) {
         for (int c = 0; c < cols; c++) {
             int cell_val = grid[r][c];
-            DrawRectangle(c * cell_size + 1, r * cell_size + 1, cell_size - 1,
-                          cell_size - 1, colors[cell_val]);
+            DrawRectangle(c * cell_size + 1, r * cell_size + 1, cell_size - 1, cell_size - 1, colors[cell_val]);
         }
     }
 };
