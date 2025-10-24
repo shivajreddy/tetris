@@ -19,7 +19,11 @@ int main() {
         switch (key) {
         case KEY_SPACE:
             PlaySound(sound_rotate);
-            block.rotate_clock();
+            if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) {
+                block.rotate_anti_clock();
+            } else {
+                block.rotate_clock();
+            }
             break;
         case KEY_LEFT:
             PlaySound(sound_move);

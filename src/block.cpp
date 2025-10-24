@@ -39,7 +39,22 @@ void Block::rotate_clock() {
         for (int c = 0; c < 3; c++) cells[r][c] = temp[r][c];
 };
 
-void Block::rotate_anti_clock() {};
+void Block::rotate_anti_clock() {
+    /* rotate 90 counter-clockwise */
+    /*
+      00 01 02        02 12 22
+      10 11 12        01 11 21
+      20 21 22        00 10 20
+     */
+    bool temp[3][3] = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+    for (int r = 0; r < 3; r++) {
+        for (int c = 0; c < 3; c++) {
+            temp[2 - c][r] = cells[r][c];
+        }
+    }
+    for (int r = 0; r < 3; r++)
+        for (int c = 0; c < 3; c++) cells[r][c] = temp[r][c];
+};
 
 Block_L::Block_L() {
     id = 1;
