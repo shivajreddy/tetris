@@ -2,22 +2,12 @@
 #include "game.hpp"
 #include "grid.hpp"
 #include "raylib.h"
-#include <array>
-
-using namespace std;
-
 
 int main() {
 
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tetris");
-    SetTargetFPS(60);
-    InitAudioDevice();
-    auto sound_rotate = LoadSound("./assets/rotate.wav");
+    GameStart(); // Initialize GAME
 
-    Grid grid = Grid(GAME_ROWS, GAME_COLS, CELL_SIZE);
-    grid.print();
-
-    Block_L block;
+    Block_S block;
 
     // Main game loop
     while (!WindowShouldClose()) {
@@ -26,33 +16,33 @@ int main() {
         ClearBackground(BLACK);
         grid.draw();
         int key = GetKeyPressed();
-        switch(key) {
-          case KEY_SPACE:
+        switch (key) {
+        case KEY_SPACE:
             PlaySound(sound_rotate);
             block.rotate_clock();
             break;
-          case KEY_LEFT:
+        case KEY_LEFT:
+            PlaySound(sound_move);
             block.move(0, -1);
-            break;              
-          case KEY_RIGHT:
+            break;
+        case KEY_RIGHT:
+            PlaySound(sound_move);
             block.move(0, 1);
             break;
-          case KEY_DOWN:
-            block.move(1, 0);              
+        case KEY_DOWN:
+            PlaySound(sound_move);
+            block.move(1, 0);
             break;
-          case KEY_UP:
-            block.move(-1, 0);              
+        case KEY_UP:
+            PlaySound(sound_move);
+            block.move(-1, 0);
             break;
         }
         block.draw();
         EndDrawing();
     }
 
-    // Cleanup
-    UnloadSound(sound_rotate);
-    CloseAudioDevice();
-    CloseWindow();
+    GameEnd(); // Clean up GAME
 
     return 0;
 }
-

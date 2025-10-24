@@ -1,4 +1,5 @@
 #include "block.hpp"
+#include "colors.hpp"
 #include "game.hpp"
 
 void Block::draw() {
@@ -54,24 +55,24 @@ Block_J::Block_J() {
 
 Block_I::Block_I() {
     id = 3;
-    color = red;
+    color = yellow;
     cells = { { { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 } } };
 };
 
 Block_S::Block_S() {
     id = 4;
-    color = red;
+    color = purple;
     cells = { { { 0, 1, 1 }, { 1, 1, 0 }, { 0, 0, 0 } } };
 };
 
 Block_T::Block_T() {
     id = 5;
-    color = red;
+    color = orange;
     cells = { { { 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 1 } } };
 };
 
 Block_Z::Block_Z() {
     id = 6;
-    color = red;
+    color = dark_gray;
     cells = { { { 1, 1, 0 }, { 0, 1, 1 }, { 0, 0, 0 } } };
 };

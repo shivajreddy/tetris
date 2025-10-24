@@ -1,5 +1,7 @@
 #include "game.hpp"
 #include "raylib.h"
+#include "grid.hpp"
+#include "colors.hpp"
 
 // Game
 const int SCREEN_WIDTH = 300;
@@ -10,12 +12,26 @@ extern const int GAME_ROWS = 20;
 extern const int GAME_COLS = 10;
 const int CELL_SIZE = 30;
 
-// Colors
-const Color red      = {232, 18, 18, 255};
-const Color blue     = {13, 64, 216, 255};
-const Color green    = {47, 230, 23, 255};
-const Color purple   = {166, 0, 247, 255};
-const Color orange   = {226, 116, 17, 255};
-const Color dark_gray = {26, 31, 40, 255};
-const Color yellow   = {237, 234, 4, 255};
-const Color cyan     = {21, 204, 209, 255};
+
+// Game State Variables
+Grid grid = Grid(GAME_ROWS, GAME_COLS, CELL_SIZE);
+Sound sound_rotate;
+Sound sound_move;
+
+// Game Start
+void GameStart() {
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tetris");
+    SetTargetFPS(60);
+    InitAudioDevice();
+    sound_rotate = LoadSound("./assets/rotate.wav");
+    sound_move = LoadSound("./assets/move.wav");
+};
+
+// Game End
+void GameEnd() {
+    // Cleanup
+    UnloadSound(sound_rotate);
+    UnloadSound(sound_move);
+    CloseAudioDevice();
+    CloseWindow();
+};
