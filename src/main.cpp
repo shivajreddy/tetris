@@ -5,7 +5,7 @@
 int main() {
 
     Game_Load_Assets();
-    Block_S block;
+    auto block = get_random_block();
     block.insert_into_game(0, 3); // Initial position (centered horizontally)
 
     // Main game loop

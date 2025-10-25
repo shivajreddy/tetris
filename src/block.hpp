@@ -9,8 +9,8 @@ public:
     Color color;
     std::array<std::array<bool, 3>, 3> block_data;
 
-  int origin_r;    
-  int origin_c;    
+    int origin_r;
+    int origin_c;
 
     virtual void insert_into_game(int offset_x, int offset_y);
     virtual void move(int rows, int cols);
@@ -33,6 +33,10 @@ class Block_I : public Block {
 public:
     Block_I();
 };
+class Block_O : public Block {
+public:
+    Block_O();
+};
 class Block_S : public Block {
 public:
     Block_S();
@@ -45,3 +49,5 @@ class Block_Z : public Block {
 public:
     Block_Z();
 };
+
+Block get_random_block();

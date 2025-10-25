@@ -5,3 +5,8 @@ CompileFlags:
     - -Ilib/raylib/windows/include
     - -IC:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30133/include
     - -IC:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/ucrtx
+
+InlayHints:
+  ParameterNames: No      # Disable parameter name hints in function calls
+  DeducedTypes: No        # Disable auto/decltype type hints
+  Designators: No         # Disable designated initializer hints
