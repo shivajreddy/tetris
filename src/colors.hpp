@@ -10,3 +10,7 @@ const Color orange   = {226, 116, 17, 255};
 const Color dark_gray = {26, 31, 40, 255};
 const Color yellow   = {237, 234, 4, 255};
 const Color cyan     = {21, 204, 209, 255};
+
+inline bool operator==(const Color& c1, const Color& c2) {
+    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b && c1.a == c2.a;
+}

@@ -1,93 +1,163 @@
 #include "block.hpp"
 #include "colors.hpp"
 #include "game.hpp"
+#include "raylib.h"
 
-void Block::draw() {
-    // given the shape, and starting cell it draws the shape there
-    // int start_r = offset_x, start_c = offset_y;
-    int cell_size = CELL_SIZE - 1;
-    for (int r = 0; r < 3; r++) {
-        for (int c = 0; c < 3; c++) {
-            if (cells[r][c]) {
-                int R = (row + r) * CELL_SIZE + 1;
-                int C = (col + c) * CELL_SIZE + 1;
-                DrawRectangle(C, R, cell_size, cell_size, color);
+
+void Block::insert_into_game(int pos_r, int pos_c) {
+    origin_r = pos_r;
+    origin_c = pos_c;    
+    for (size_t r = 0; r < block_data.size(); r++) {
+        for (size_t c = 0; c < block_data[0].size(); c++) {
+            if (block_data[r][c]) {  // Check if this block cell is filled
+                int game_r = pos_r + r;  // Game grid row
+                int game_c = pos_c + c;  // Game grid col
+                
+                // Bounds check
+                if (game_r >= 0 && game_r < GAME_ROWS && 
+                    game_c >= 0 && game_c < GAME_COLS) {
+                    data[game_r][game_c] = color;
+                }
             }
         }
     }
-};
+}
 
 void Block::move(int rows, int cols) {
-    row += rows;
-    col += cols;
-};
+    // Clear old position FIRST
+    for (size_t r = 0; r < block_data.size(); r++) {
+        for (size_t c = 0; c < block_data[0].size(); c++) {
+            if (block_data[r][c]) {
+                int game_r = origin_r + r;
+                int game_c = origin_c + c;
+                if (game_r >= 0 && game_r < GAME_ROWS && 
+                    game_c >= 0 && game_c < GAME_COLS) {
+                    data[game_r][game_c] = dark_gray;
+                }
+            }
+        }
+    }
+    
+    // Calculate new position
+    int new_r = origin_r + rows;
+    int new_c = origin_c + cols;
+    
+    // Check collision at new position
+    if (!clash_detection(*this, new_r, new_c)) {
+        PlaySound(sound_move);
+        origin_r = new_r;
+        origin_c = new_c;
+    }
+    // If collision, origin_r and origin_c stay at old values
+    
+    // Insert at final position (either new or old)
+    insert_into_game(origin_r, origin_c);
+}
 
 void Block::rotate_clock() {
-    /* rotate 90 clockwise */
-    /*
-      00 01 02        20 10 00
-      10 11 12        21 11 01
-      20 21 22        22 12 02
-     */
-    bool temp[3][3] = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
-    for (int r = 0; r < 3; r++) {
-        for (int c = 0; c < 3; c++) {
-            temp[c][2 - r] = cells[r][c];
+    // Clear old position
+    for (size_t r = 0; r < block_data.size(); r++) {
+        for (size_t c = 0; c < block_data[0].size(); c++) {
+            if (block_data[r][c]) {
+                int game_r = origin_r + r;
+                int game_c = origin_c + c;
+                if (game_r >= 0 && game_r < GAME_ROWS && 
+                    game_c >= 0 && game_c < GAME_COLS) {
+                    data[game_r][game_c] = dark_gray;
+                }
+            }
         }
     }
-    for (int r = 0; r < 3; r++)
-        for (int c = 0; c < 3; c++) cells[r][c] = temp[r][c];
-};
+    
+    // Rotate
+    std::array<std::array<bool, 3>, 3> temp = {};
+    for (int r = 0; r < 3; r++) {
+        for (int c = 0; c < 3; c++) {
+            temp[c][2 - r] = block_data[r][c];
+        }
+    }
+    
+    // Check if rotation causes collision
+    std::array<std::array<bool, 3>, 3> old_data = block_data;
+    block_data = temp;
+    
+    if (clash_detection(*this, origin_r, origin_c)) {
+        // Revert rotation if it would cause collision
+        block_data = old_data;
+    }
+    
+    // Re-insert at current position
+    insert_into_game(origin_r, origin_c);
+}
 
 void Block::rotate_anti_clock() {
-    /* rotate 90 counter-clockwise */
-    /*
-      00 01 02        02 12 22
-      10 11 12        01 11 21
-      20 21 22        00 10 20
-     */
-    bool temp[3][3] = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
-    for (int r = 0; r < 3; r++) {
-        for (int c = 0; c < 3; c++) {
-            temp[2 - c][r] = cells[r][c];
+    // Clear old position
+    for (size_t r = 0; r < block_data.size(); r++) {
+        for (size_t c = 0; c < block_data[0].size(); c++) {
+            if (block_data[r][c]) {
+                int game_r = origin_r + r;
+                int game_c = origin_c + c;
+                if (game_r >= 0 && game_r < GAME_ROWS && 
+                    game_c >= 0 && game_c < GAME_COLS) {
+                    data[game_r][game_c] = dark_gray;
+                }
+            }
         }
     }
-    for (int r = 0; r < 3; r++)
-        for (int c = 0; c < 3; c++) cells[r][c] = temp[r][c];
-};
+    
+    // Rotate
+    std::array<std::array<bool, 3>, 3> temp = {};
+    for (int r = 0; r < 3; r++) {
+        for (int c = 0; c < 3; c++) {
+            temp[2 - c][r] = block_data[r][c];
+        }
+    }
+    
+    // Check if rotation causes collision
+    std::array<std::array<bool, 3>, 3> old_data = block_data;
+    block_data = temp;
+    
+    if (clash_detection(*this, origin_r, origin_c)) {
+        // Revert rotation if it would cause collision
+        block_data = old_data;
+    }
+    
+    // Re-insert at current position
+    insert_into_game(origin_r, origin_c);
+}
 
 Block_L::Block_L() {
     id = 1;
     color = blue;
-    cells = { { { 1, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 } } };
+    block_data = { { { 1, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 } } };
 };
 
 Block_J::Block_J() {
     id = 2;
     color = red;
-    cells = { { { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 1 } } };
+    block_data = { { { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 1 } } };
 };
 
 Block_I::Block_I() {
     id = 3;
     color = yellow;
-    cells = { { { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 } } };
+    block_data = { { { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 } } };
 };
 
 Block_S::Block_S() {
     id = 4;
     color = purple;
-    cells = { { { 0, 1, 1 }, { 1, 1, 0 }, { 0, 0, 0 } } };
+    block_data = { { { 0, 1, 1 }, { 1, 1, 0 }, { 0, 0, 0 } } };
 };
 
 Block_T::Block_T() {
     id = 5;
     color = orange;
-    cells = { { { 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 1 } } };
+    block_data = { { { 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 1 } } };
 };
 
 Block_Z::Block_Z() {
     id = 6;
-    color = dark_gray;
-    cells = { { { 1, 1, 0 }, { 0, 1, 1 }, { 0, 0, 0 } } };
-};
+    color = green;
+    block_data = { { { 1, 1, 0 }, { 0, 1, 1 }, { 0, 0, 0 } } };
+}

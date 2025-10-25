@@ -1,20 +1,19 @@
 #include "block.hpp"
 #include "game.hpp"
-#include "grid.hpp"
 #include "raylib.h"
 
 int main() {
 
-    GameStart(); // Initialize GAME
-
+    Game_Load_Assets();
     Block_S block;
+    block.insert_into_game(0, 3); // Initial position (centered horizontally)
 
     // Main game loop
     while (!WindowShouldClose()) {
         BeginDrawing();
-        // ClearBackground({ 44, 44, 127, 255 });
         ClearBackground(BLACK);
-        grid.draw();
+        draw_cells();
+
         int key = GetKeyPressed();
         switch (key) {
         case KEY_SPACE:
@@ -42,11 +41,11 @@ int main() {
             block.move(-1, 0);
             break;
         }
-        block.draw();
+        draw_cells();
         EndDrawing();
     }
 
-    GameEnd(); // Clean up GAME
+    Game_UnLoad_Assets();
 
     return 0;
 }

@@ -1,20 +1,27 @@
 #pragma once
 #include "raylib.h"
-#include "grid.hpp"
+#include <array>
+#include "block.hpp"
 
-// Game
-extern const int SCREEN_WIDTH;
-extern const int SCREEN_HEIGHT;
+// Game App Variables
+constexpr int SCREEN_WIDTH = 300;
+constexpr int SCREEN_HEIGHT = 600;
 
-// Grid
-extern const int GAME_ROWS;
-extern const int GAME_COLS;
-extern const int CELL_SIZE;
+// Game Grid Variables
+constexpr int GAME_ROWS = 20;
+constexpr int GAME_COLS = 10;
+constexpr int CELL_SIZE = 30;
 
-// Game State Variables
-extern Grid grid;
+// Game State
+extern std::array<std::array<Color, GAME_COLS>, GAME_ROWS> data;
+
+// Game Sound Variables
 extern Sound sound_rotate;
 extern Sound sound_move;
 
-void GameStart();
-void GameEnd();
+extern void Game_Load_Assets();
+extern void Game_UnLoad_Assets();
+
+extern void draw_cells();
+// extern bool clash_detection(int r, int c);
+extern bool clash_detection(const Block& block, int origin_r, int origin_c);

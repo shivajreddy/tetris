@@ -7,12 +7,12 @@ class Block {
 public:
     unsigned int id; // unique id
     Color color;
-    std::array<std::array<bool, 3>, 3> cells;
+    std::array<std::array<bool, 3>, 3> block_data;
 
-    int row = 0;
-    int col = 0;
+  int origin_r;    
+  int origin_c;    
 
-    virtual void draw();
+    virtual void insert_into_game(int offset_x, int offset_y);
     virtual void move(int rows, int cols);
     virtual void rotate_clock();
     virtual void rotate_anti_clock();
