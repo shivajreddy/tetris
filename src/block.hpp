@@ -13,7 +13,7 @@ public:
     int origin_c;
 
     virtual void insert_into_game(int offset_x, int offset_y);
-    virtual void move(int rows, int cols);
+    virtual int move(int rows, int cols);
     virtual void rotate_clock();
     virtual void rotate_anti_clock();
 

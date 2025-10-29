@@ -25,3 +25,7 @@ extern void Game_UnLoad_Assets();
 
 extern void draw_cells();
 extern bool clash_detection(const Block& block, int origin_r, int origin_c);
+
+// GAME KEYBOARD
+extern void handle_keyboard(Block& block);
+// int key = GetKeyPressed();

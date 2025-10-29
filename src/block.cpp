@@ -24,7 +24,13 @@ void Block::insert_into_game(int pos_r, int pos_c) {
     }
 }
 
-void Block::move(int rows, int cols) {
+// Return values:
+// 0 = successful move
+// 1 = hit bottom
+// 2 = hit side wall
+// 3 = landed on existing block
+
+int Block::move(int rows, int cols) {
     // Clear old position FIRST
     for (size_t r = 0; r < block_data.size(); r++) {
         for (size_t c = 0; c < block_data[0].size(); c++) {
@@ -48,11 +54,43 @@ void Block::move(int rows, int cols) {
         PlaySound(sound_move);
         origin_r = new_r;
         origin_c = new_c;
+        insert_into_game(origin_r, origin_c);
+        return 0; // Successful move
     }
-    // If collision, origin_r and origin_c stay at old values
 
-    // Insert at final position (either new or old)
+    // Collision detected - determine type
+    int collision_type = 1; // Default: assume bottom
+
+    // Check if hit bottom
+    for (size_t r = 0; r < block_data.size(); r++) {
+        for (size_t c = 0; c < block_data[0].size(); c++) {
+            if (block_data[r][c]) {
+                if (new_r + r >= GAME_ROWS) {
+                    collision_type = 1; // Hit bottom
+                    goto done_checking;
+                }
+            }
+        }
+    }
+
+    // Check if hit side wall
+    for (size_t r = 0; r < block_data.size(); r++) {
+        for (size_t c = 0; c < block_data[0].size(); c++) {
+            if (block_data[r][c]) {
+                if (new_c + c < 0 || new_c + c >= GAME_COLS) {
+                    collision_type = 2; // Hit side wall
+                    goto done_checking;
+                }
+            }
+        }
+    }
+
+    // Must have landed on existing block
+    collision_type = 3;
+
+done_checking:
     insert_into_game(origin_r, origin_c);
+    return collision_type;
 }
 
 void Block::rotate_clock() {
@@ -85,6 +123,8 @@ void Block::rotate_clock() {
     if (clash_detection(*this, origin_r, origin_c)) {
         // Revert rotation if it would cause collision
         block_data = old_data;
+    } else {
+        PlaySound(sound_rotate);
     }
 
     // Re-insert at current position
@@ -121,6 +161,8 @@ void Block::rotate_anti_clock() {
     if (clash_detection(*this, origin_r, origin_c)) {
         // Revert rotation if it would cause collision
         block_data = old_data;
+    } else {
+        PlaySound(sound_rotate);
     }
 
     // Re-insert at current position

@@ -2,6 +2,7 @@
 #include "block.hpp"
 #include "colors.hpp"
 #include "raylib.h"
+#include <cstdio>
 
 // Game State Variables
 Sound sound_rotate;
@@ -69,4 +70,53 @@ bool clash_detection(const Block& block, int origin_r, int origin_c) {
         }
     }
     return false; // No clash
+}
+
+// GAME HANDLE KEYBAORD
+
+bool check_old_block(Block& block) {
+    // get the last row out of the 3 rows that has a cell
+    int last_row = -1;
+    for (int r = 2; r >= 0; r--) {
+        if (last_row != -1) break;
+        for (int c = 0; c < 3; c++) {
+            if (block.block_data[r][c]) {
+                last_row = r;
+                break;
+            }
+        }
+    }
+    // get `games grid row` idx of the bottom most cell of block
+    int last_grid_row = block.origin_r + last_row;
+    printf("last_grid_row: %d\n", last_grid_row);
+    return last_grid_row == GAME_ROWS;
+}
+
+void handle_keyboard(Block& block) {
+    int key = GetKeyPressed();
+    switch (key) {
+    case KEY_SPACE:
+        if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) {
+            block.rotate_anti_clock();
+        } else {
+            block.rotate_clock();
+        }
+        break;
+    case KEY_LEFT:
+        block.move(0, -1);
+        check_old_block(block);
+        break;
+    case KEY_RIGHT:
+        block.move(0, 1);
+        check_old_block(block);
+        break;
+    case KEY_DOWN:
+        block.move(1, 0);
+        check_old_block(block);
+        break;
+    case KEY_UP:
+        block.move(-1, 0);
+        check_old_block(block);
+        break;
+    }
 }
